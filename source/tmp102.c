@@ -32,7 +32,7 @@ void getTemperature(int16_t * temperature)
 	uint8_t * rawTemp = (uint8_t *)malloc(2);
 	//read from pointer register 0x00(temperature)
 	//byte 1 is MSB, byte 2 is LSB(T3-T0)
-	val = i2cReadBytes(0x90,0x02,rawTemp,2);
+	val = i2cReadBytes(0x90,0x00,rawTemp,2);
 	*temperature = 0;
 	*temperature |= ((rawTemp[0]) << 4);
 	*temperature |= ((rawTemp[1]) >> 4);
@@ -45,7 +45,7 @@ void printTemperature(int16_t * temperature)
 {
 	int32_t printTemp;
 	printTemp = ((int32_t)*temperature) * .0625;
-	log_string((uint8_t*)"Temp Low Set",log_level, PRINTTEMPERATURE);
+	log_string((uint8_t*)"Temperature: ",log_level, PRINTTEMPERATURE);
 	PRINTF("%d\n\r", printTemp);
 
 }

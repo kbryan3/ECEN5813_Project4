@@ -35,7 +35,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#ifndef PC
 #include "board.h"
 #include "peripherals.h"
 #include "pin_mux.h"
@@ -44,35 +43,29 @@
 #include "fsl_debug_console.h"
 #include "led_control.h"
 #include "i2c.h"
-#endif
 #include "logger.h"
 #include "tmp102.h"
-/* TODO: insert other include files here. */
+#include "statemachine.h"
 
-/* TODO: insert other definitions and declarations here. */
+
 const uint8_t RED = 0;
 const uint8_t GREEN = 1;
 const uint8_t BLUE = 2;
 const uint8_t OFF = 3;
-const uint8_t LENGTH = 16;
-const uint8_t SEED = 29;
 
 _Bool log_a;
 //uint8_t * num_readings;
 
 logger_level log_level;
 //machine_state states;
+machine_state state;
 
-
-
-uint8_t passCount = 0;
 
 /*
  * @brief   Application entry point.
  */
 int main(void) {
 
-#ifndef PC
   	/* Init board hardware. */
     BOARD_InitBootPins();
     BOARD_InitBootClocks();
@@ -82,42 +75,22 @@ int main(void) {
     initializeLEDs();
     toggleLED(OFF);
     i2cInit();
+    enableInterruptMode(); //enables TMP102 interrupt mode
     int16_t * temperature = (int16_t *)malloc(2);
     uint8_t * alertLowTemp = (uint8_t *)malloc(2);
+    uint8_t * numReadings = (uint8_t *)malloc(1);
+    int16_t * averageTemp = (int16_t *)malloc(2);
+    *numReadings = 0;
     alertLowTemp[0] = 0; //set the top byte of alert register(signed)
     alertLowTemp[1] = 0; //bottom byte of alert register(signed)
-    enableInterruptMode(); //enables TMP102 interrupt mode
-    setAlertLow(alertLowTemp);
-#endif
     log_a = 1;
     log_level = DBUG;
- //   states = TEMP_READING;
 
-
-
-
-    /* Force the counter to be placed into memory. */
-//    volatile static int i = 0 ;
     /* Enter an infinite loop*/
     while(1)
     {
-    	log_string((uint8_t*)"LED Blue ON", log_level, TOGGLELED);
-    	toggleLED(2);
-    	log_string((uint8_t*)"LED Green ON", log_level, TOGGLELED);
-    	toggleLED(1);
-
-
-    	//read from pointer register 0x00(temperature)
-    	//byte 1 is MSB, byte 2 is LSB(T3-T0)
-    	getTemperature(temperature);
-
-
-
-
-
-
-
-    	__asm volatile ("nop");
+    	//run state based state machine
+    	state = stateStateMachine(temperature,numReadings,averageTemp);
     }
-    return 0 ;
+    return 0;
 }

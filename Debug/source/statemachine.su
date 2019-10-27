@@ -1,1 +1,3 @@
-statemachine.c:3:15:stateStateMachine	16	static
+statemachine.c:16:15:stateStateMachine	32	static
+statemachine.c:61:6:averageReading	32	static
+statemachine.c:76:6:printAverageTemperature	32	static

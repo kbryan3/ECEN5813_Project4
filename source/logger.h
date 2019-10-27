@@ -37,7 +37,8 @@ typedef enum function_called
 {
 	TOGGLELED, //function 1 called
 	SETALERTLOW, //function 2 called
-	PRINTTEMPERATURE //printTemperature() called
+	PRINTTEMPERATURE, //printTemperature() called
+	PRINTAVERAGETEMPERATURE //printAverageTemperature()
 }function_called;
 
 extern _Bool log_a;

@@ -134,5 +134,9 @@ void printFunction(function_called func)
 	{
 		PRINTF("printTemperature: ");
 	}
+	else if(func == PRINTAVERAGETEMPERATURE)
+	{
+		PRINTF("printAverageTemperature(): ");
+	}
 }
 
