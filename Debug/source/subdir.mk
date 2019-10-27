@@ -9,7 +9,8 @@ C_SRCS += \
 ../source/logger.c \
 ../source/main.c \
 ../source/mtb.c \
-../source/semihost_hardfault.c 
+../source/semihost_hardfault.c \
+../source/tmp102.c 
 
 OBJS += \
 ./source/i2c.o \
@@ -17,7 +18,8 @@ OBJS += \
 ./source/logger.o \
 ./source/main.o \
 ./source/mtb.o \
-./source/semihost_hardfault.o 
+./source/semihost_hardfault.o \
+./source/tmp102.o 
 
 C_DEPS += \
 ./source/i2c.d \
@@ -25,7 +27,8 @@ C_DEPS += \
 ./source/logger.d \
 ./source/main.d \
 ./source/mtb.d \
-./source/semihost_hardfault.d 
+./source/semihost_hardfault.d \
+./source/tmp102.d 
 
 
 # Each subdirectory must supply rules for building sources it contributes

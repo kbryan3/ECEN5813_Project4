@@ -46,6 +46,7 @@
 #include "i2c.h"
 #endif
 #include "logger.h"
+#include "tmp102.h"
 /* TODO: insert other include files here. */
 
 /* TODO: insert other definitions and declarations here. */
@@ -58,10 +59,10 @@ const uint8_t SEED = 29;
 
 _Bool log_a;
 //uint8_t * num_readings;
-//int16_t * temperature;
+
 logger_level log_level;
 //machine_state states;
-uint32_t val;
+
 
 
 uint8_t passCount = 0;
@@ -81,7 +82,7 @@ int main(void) {
     initializeLEDs();
     toggleLED(OFF);
     i2cInit();
-    uint8_t * rawTemp = (uint8_t *)malloc(2);
+    int16_t * temperature = (int16_t *)malloc(2);
 #endif
     log_a = 1;
     log_level = DBUG;
@@ -103,7 +104,7 @@ int main(void) {
 
     	//read from pointer register 0x00(temperature)
     	//byte 1 is MSB, byte 2 is LSB(T3-T0)
-    	val = i2cReadBytes(0x90,0x00,rawTemp,2);
+    	getTemperature(temperature);
 
 
 

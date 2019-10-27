@@ -1,1 +1,2 @@
-tmp102.c:15:6:getTemperature	16	static
+tmp102.c:15:6:getTemperature	24	static
+tmp102.c:30:6:printTemperature	32	static
