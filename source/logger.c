@@ -126,9 +126,13 @@ void printFunction(function_called func)
 	{
 		PRINTF("toggleLED(): ");
 	}
-	else if(func == FUNCTION2)
+	else if(func == SETALERTLOW)
 	{
-		PRINTF("function2: ");
+		PRINTF("setAlertLow: ");
+	}
+	else if(func == PRINTTEMPERATURE)
+	{
+		PRINTF("printTemperature: ");
 	}
 }
 

@@ -24,7 +24,16 @@
 #include "logger.h"
 #include "i2c.h"
 
-
+/**
+ *  @brief enables TMP102 interrupt mode
+ */
+void enableInterruptMode();
+/**
+* @brief Sets the low temperature for the alert
+*
+* @param uint8_t* tempLow pointer to low temp value(note to feed in as though it is signed)
+*/
+void setAlertLow(uint8_t * tempLow);
 
 /**
 * @brief Gets temperature from tmp102

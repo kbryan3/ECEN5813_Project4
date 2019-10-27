@@ -36,7 +36,8 @@ typedef enum logger_level
 typedef enum function_called
 {
 	TOGGLELED, //function 1 called
-	FUNCTION2, //function 2 called
+	SETALERTLOW, //function 2 called
+	PRINTTEMPERATURE //printTemperature() called
 }function_called;
 
 extern _Bool log_a;

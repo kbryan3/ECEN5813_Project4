@@ -83,6 +83,11 @@ int main(void) {
     toggleLED(OFF);
     i2cInit();
     int16_t * temperature = (int16_t *)malloc(2);
+    uint8_t * alertLowTemp = (uint8_t *)malloc(2);
+    alertLowTemp[0] = 0; //set the top byte of alert register(signed)
+    alertLowTemp[1] = 0; //bottom byte of alert register(signed)
+    enableInterruptMode(); //enables TMP102 interrupt mode
+    setAlertLow(alertLowTemp);
 #endif
     log_a = 1;
     log_level = DBUG;
@@ -98,13 +103,14 @@ int main(void) {
     {
     	log_string((uint8_t*)"LED Blue ON", log_level, TOGGLELED);
     	toggleLED(2);
-    	log_string((uint8_t*)"LED Green ON", log_level, FUNCTION2);
+    	log_string((uint8_t*)"LED Green ON", log_level, TOGGLELED);
     	toggleLED(1);
 
 
     	//read from pointer register 0x00(temperature)
     	//byte 1 is MSB, byte 2 is LSB(T3-T0)
     	getTemperature(temperature);
+
 
 
 
