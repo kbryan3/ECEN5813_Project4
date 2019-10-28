@@ -7,7 +7,7 @@ source/statemachine.o source/statemachine.d: ../source/statemachine.c \
  ../drivers/fsl_common.h ../drivers/fsl_gpio.h ../board/peripherals.h \
  ../board/pin_mux.h ../board/clock_config.h ../CMSIS/MKL25Z4.h \
  ../utilities/fsl_debug_console.h ../source/logger.h ../source/tmp102.h \
- ../source/i2c.h
+ ../source/i2c.h ../source/led_control.h
 
 ../source/statemachine.h:
 
@@ -54,3 +54,5 @@ source/statemachine.o source/statemachine.d: ../source/statemachine.c \
 ../source/tmp102.h:
 
 ../source/i2c.h:
+
+../source/led_control.h:

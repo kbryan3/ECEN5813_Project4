@@ -1,7 +1,7 @@
  /********************************************************************
 *
 * @file statemachine.c
-* @brief Can be used to run a state based and table based statemachine
+* @brief Can be used to run a state based and table based state machine
 *
 * @author Kyle Bryan
 * @date October 2019
@@ -58,6 +58,54 @@ machine_state stateStateMachine(int16_t * temperature, uint8_t * numReadings, in
 
 	}
 }
+
+machine_state stateTableMachine(int16_t * temperature, uint8_t * numReadings, int16_t * averageTemp,
+		struct sStateTableEntry *currentState)
+{
+	struct sStateTableEntry *cstate = (struct sStateTableEntry*)malloc(sizeof(struct sStateTableEntry));
+	*cstate = *currentState;
+	uint8_t timeout_count = 0;
+	cstate->state = TEMP_READING;
+	while(1)
+	{
+		if(cstate->state == TEMP_READING)
+		{
+	    	toggleLED(1);
+			getTemperature(temperature);
+			HandleEventComplete(cstate);
+		}
+		else if(cstate->state == AVERAGE_WAIT)
+		{
+			toggleLED(1);
+			(*numReadings)++;
+			averageReading(numReadings, averageTemp, temperature);
+			printAverageTemperature(averageTemp);
+			//wait for 15 seconds
+			timeout_count++;
+			if(timeout_count < 4)
+			{
+				HandleEventTimout3(cstate);
+			}
+			else
+			{
+				return cstate->state;
+			}
+		}
+		else if(cstate->state == TEMP_ALERT)
+		{
+			//set LED Blue
+			toggleLED(2);
+			//disable interrupts for alert transitions
+			getTemperature(temperature);
+			HandleEventComplete(cstate);
+		}
+		else if(cstate->state == DISCONNECTED)
+		{
+			return cstate->state;
+		}
+	}
+
+}
 void averageReading(uint8_t * numReadings, int16_t * averageTemp, int16_t * temperature)
 {
 	if(*numReadings == 1)
@@ -82,3 +130,23 @@ void printAverageTemperature(int16_t * averageTemp)
 
 }
 
+void HandleEventAlert(struct sStateTableEntry *currentState)
+{
+	currentState->state = currentState->alert;
+}
+void HandleEventComplete(struct sStateTableEntry *currentState)
+{
+	currentState->state = currentState->complete;
+}
+void HandleEventDisconnect(struct sStateTableEntry *currentState)
+{
+	currentState->state = currentState->disconnect;
+}
+void HandleEventTimout3(struct sStateTableEntry *currentState)
+{
+	currentState->state = currentState->timout1_3;
+}
+void HandleEventTimout4(struct sStateTableEntry *currentState)
+{
+	currentState->state = currentState->timeout4;
+}

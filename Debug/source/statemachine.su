@@ -1,3 +1,9 @@
 statemachine.c:16:15:stateStateMachine	32	static
-statemachine.c:61:6:averageReading	32	static
-statemachine.c:76:6:printAverageTemperature	32	static
+statemachine.c:62:15:stateTableMachine	32	static
+statemachine.c:109:6:averageReading	32	static
+statemachine.c:124:6:printAverageTemperature	32	static
+statemachine.c:133:6:HandleEventAlert	16	static
+statemachine.c:137:6:HandleEventComplete	16	static
+statemachine.c:152:6:HandleEventDisconnect	16	static
+statemachine.c:156:6:HandleEventTimout3	16	static
+statemachine.c:160:6:HandleEventTimout4	16	static

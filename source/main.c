@@ -52,6 +52,13 @@ const uint8_t RED = 0;
 const uint8_t GREEN = 1;
 const uint8_t BLUE = 2;
 const uint8_t OFF = 3;
+struct sStateTableEntry stateTablex[] ={
+		{TEMP_READING, AVERAGE_WAIT, TEMP_ALERT, DISCONNECTED, TEMP_READING, TEMP_READING},
+		{AVERAGE_WAIT, TEMP_READING, AVERAGE_WAIT, DISCONNECTED, TEMP_READING, AVERAGE_WAIT},
+		{TEMP_ALERT, AVERAGE_WAIT, TEMP_ALERT, DISCONNECTED, TEMP_ALERT, TEMP_ALERT},
+		{DISCONNECTED, DISCONNECTED, DISCONNECTED, DISCONNECTED, DISCONNECTED, DISCONNECTED}
+
+};
 
 _Bool log_a;
 //uint8_t * num_readings;
@@ -91,6 +98,11 @@ int main(void) {
     {
     	//run state based state machine
     	state = stateStateMachine(temperature,numReadings,averageTemp);
+    	if(state == AVERAGE_WAIT)
+    	{
+    		//run Table based state machine
+    		state = stateTableMachine(temperature,numReadings,averageTemp, stateTablex);
+    	}
     }
     return 0;
 }
