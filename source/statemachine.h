@@ -24,6 +24,7 @@
 #include "logger.h"
 #include "tmp102.h"
 #include "led_control.h"
+#include "bit.h"
 
 typedef enum machine_state
 {

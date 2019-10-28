@@ -3,6 +3,7 @@ logger.c:31:6:log_disable	8	static
 logger.c:37:7:log_status	8	static
 logger.c:50:6:log_data	40	static
 logger.c:75:6:log_string	16	static
-logger.c:91:6:log_int	16	static
-logger.c:107:6:printLevel	16	static
-logger.c:123:6:printFunction	16	static
+logger.c:91:6:log_temp	32	static
+logger.c:105:6:log_int	16	static
+logger.c:121:6:printLevel	16	static
+logger.c:137:6:printFunction	16	static

@@ -46,6 +46,7 @@
 #include "logger.h"
 #include "tmp102.h"
 #include "statemachine.h"
+#include "bit.h"
 
 
 const uint8_t RED = 0;
@@ -61,11 +62,13 @@ struct sStateTableEntry stateTablex[] ={
 };
 
 _Bool log_a;
-//uint8_t * num_readings;
+uint8_t  result;
 
 logger_level log_level;
 //machine_state states;
 machine_state state;
+my_bit_result bit;
+
 
 
 /*
@@ -82,11 +85,21 @@ int main(void) {
     initializeLEDs();
     toggleLED(OFF);
     i2cInit();
+
+    //POST Test
+	bit = runBIT();
+	if(bit == BITFAIL)
+	{
+		toggleLED(0);
+		while(1){bit = BITFAIL;}
+	}
+
     enableInterruptMode(); //enables TMP102 interrupt mode
     int16_t * temperature = (int16_t *)malloc(2);
     uint8_t * alertLowTemp = (uint8_t *)malloc(2);
     uint8_t * numReadings = (uint8_t *)malloc(1);
     int16_t * averageTemp = (int16_t *)malloc(2);
+    getTemperature(temperature);
     *numReadings = 0;
     alertLowTemp[0] = 0; //set the top byte of alert register(signed)
     alertLowTemp[1] = 0; //bottom byte of alert register(signed)
@@ -98,10 +111,22 @@ int main(void) {
     {
     	//run state based state machine
     	state = stateStateMachine(temperature,numReadings,averageTemp);
+    	//returns average_wait after 4th timeout and moves to next machine
     	if(state == AVERAGE_WAIT)
     	{
     		//run Table based state machine
     		state = stateTableMachine(temperature,numReadings,averageTemp, stateTablex);
+    		if(state == DISCONNECTED)
+    		{
+        		toggleLED(0);
+        		while(1){bit = BITFAIL;}
+    		}
+    	}
+    	//if disconnected then LED is red and wait for reset
+    	else
+    	{
+    		toggleLED(0);
+    		while(1){bit = BITFAIL;}
     	}
     }
     return 0;

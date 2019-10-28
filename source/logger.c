@@ -88,6 +88,20 @@ void log_string(uint8_t * str, logger_level level, function_called func)
 	}
 }
 
+void log_temp(int16_t * temperature,
+		logger_level level, function_called func)
+{
+	int32_t printTemp;
+	printTemp = ((int32_t)*temperature) * .0625;
+	if(log_a)
+	{
+		printLevel(level);
+		printFunction(func);
+		PRINTF("Temperature is: %dC", printTemp);
+		PRINTF("\n\r");
+	}
+}
+
 void log_int(uint32_t * integer, logger_level level, function_called func)
 {
 	if(log_a)
@@ -137,6 +151,10 @@ void printFunction(function_called func)
 	else if(func == PRINTAVERAGETEMPERATURE)
 	{
 		PRINTF("printAverageTemperature(): ");
+	}
+	else if(func == GETTEMPERATURE)
+	{
+		PRINTF("getTemperature(): ");
 	}
 }
 

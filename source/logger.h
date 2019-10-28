@@ -38,7 +38,8 @@ typedef enum function_called
 	TOGGLELED, //function 1 called
 	SETALERTLOW, //function 2 called
 	PRINTTEMPERATURE, //printTemperature() called
-	PRINTAVERAGETEMPERATURE //printAverageTemperature()
+	PRINTAVERAGETEMPERATURE, //printAverageTemperature()
+	GETTEMPERATURE //getTemperature() called
 }function_called;
 
 extern _Bool log_a;
@@ -92,6 +93,15 @@ void log_data(uint32_t * loc, size_t length, logger_level level, function_called
 */
 void log_string(uint8_t * str, logger_level level, function_called func);
 
+/**
+* @brief Prints a temperature in Celsius
+*
+* @param int16_t * temperature pointer to a 16-bit signed temperature
+*
+* @return void
+*/
+void log_temp(int16_t * temperature,
+		logger_level level, function_called func);
 /**
 * @brief Prints a given number
 *

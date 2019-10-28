@@ -36,6 +36,13 @@
 #define NACK I2C0->C1 |= I2C_C1_TXAK_MASK
 #define ACK I2C0->C1 &= ~I2C_C1_TXAK_MASK
 
+typedef enum i2c_test
+{
+	PASS,
+	FAIL// sensor is disconnected
+
+}i2c_test;
+
 
 /**
 * @brief Initializes I2C controller
@@ -98,6 +105,7 @@ uint8_t i2cReadByte(uint8_t dev, uint8_t reg);
 uint8_t i2cReadBytes(uint8_t dev_adx, uint8_t reg_adx, uint8_t * data,
 		int8_t data_count);
 
+uint8_t i2cTest(uint8_t dev, uint8_t reg);
 
 
 #endif /* __I2C_H__ */

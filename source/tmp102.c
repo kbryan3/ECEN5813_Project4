@@ -38,7 +38,7 @@ void getTemperature(int16_t * temperature)
 	*temperature |= ((rawTemp[1]) >> 4);
 	*temperature = (*temperature & 0x800) ? (*temperature|0xF000) : *temperature;
 	free(rawTemp);
-	printTemperature(temperature);
+	log_temp(temperature, log_level, GETTEMPERATURE);
 }
 
 void printTemperature(int16_t * temperature)

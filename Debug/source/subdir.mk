@@ -4,6 +4,7 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS += \
+../source/bit.c \
 ../source/i2c.c \
 ../source/led_control.c \
 ../source/logger.c \
@@ -14,6 +15,7 @@ C_SRCS += \
 ../source/tmp102.c 
 
 OBJS += \
+./source/bit.o \
 ./source/i2c.o \
 ./source/led_control.o \
 ./source/logger.o \
@@ -24,6 +26,7 @@ OBJS += \
 ./source/tmp102.o 
 
 C_DEPS += \
+./source/bit.d \
 ./source/i2c.d \
 ./source/led_control.d \
 ./source/logger.d \

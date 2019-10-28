@@ -30,6 +30,10 @@ void i2cInit()
 
 	//select high drive mode
 	I2C0->C2 |= (I2C_C2_HDRS_MASK);
+
+	//set timeout
+	I2C0->SLTH = I2C_SLTH_SSLT(0x01);
+
 }
 
 
@@ -130,4 +134,34 @@ uint8_t i2cReadBytes(uint8_t dev_adx, uint8_t reg_adx, uint8_t *data,
 	I2C_M_STOP;
 	return 1;
 
+}
+
+i2c_test i2cTest(uint8_t dev, uint8_t reg)
+{
+//	uint8_t data;
+	uint32_t count = 0;
+
+	I2C_TRAN; //set to transmit mode
+	I2C_M_START; //send start
+	I2C0->D = dev; //send dev address(write)
+	while((I2C0->S & I2C_S_IICIF_MASK)==0){}
+	I2C0->S |= I2C_S_IICIF_MASK;
+
+	I2C0->D = reg; //send register address
+	I2C_WAIT
+
+	I2C_M_RSTART;	//repeated start
+	I2C0->D = (dev|0x1);	//send dev address and read
+	I2C_WAIT
+
+	I2C_REC;	//set to receive mode
+	NACK;
+
+	I2C0->D; //dummy read
+	I2C_WAIT
+
+	I2C_M_STOP;  //send stop
+	I2C0->D; //read data
+
+	return PASS;
 }

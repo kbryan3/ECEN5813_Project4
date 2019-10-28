@@ -16,6 +16,7 @@
 machine_state stateStateMachine(int16_t * temperature, uint8_t * numReadings, int16_t * averageTemp)
 {
 	machine_state state = TEMP_READING;
+	my_bit_result bit = PASS;
 	uint8_t timeout_count = 0;
 	while(1)
 	{
@@ -24,6 +25,12 @@ machine_state stateStateMachine(int16_t * temperature, uint8_t * numReadings, in
 			case TEMP_READING : //get temperature
 				//set LED Green
 		    	toggleLED(1);
+		    	bit = runBIT();
+		    	if(bit == BITFAIL)
+		    	{
+		    		state = DISCONNECTED;
+		    		break;
+		    	}
 				getTemperature(temperature);
 				state = AVERAGE_WAIT;
 				break;
@@ -65,14 +72,23 @@ machine_state stateTableMachine(int16_t * temperature, uint8_t * numReadings, in
 	struct sStateTableEntry *cstate = (struct sStateTableEntry*)malloc(sizeof(struct sStateTableEntry));
 	*cstate = *currentState;
 	uint8_t timeout_count = 0;
+	my_bit_result bit = BITPASS;
 	cstate->state = TEMP_READING;
 	while(1)
 	{
 		if(cstate->state == TEMP_READING)
 		{
 	    	toggleLED(1);
-			getTemperature(temperature);
-			HandleEventComplete(cstate);
+	    	bit = runBIT();
+	    	if(bit == BITFAIL)
+	    	{
+	    		HandleEventDisconnect(cstate);
+	    	}
+	    	else
+	    	{
+	    		getTemperature(temperature);
+	    		HandleEventComplete(cstate);
+	    	}
 		}
 		else if(cstate->state == AVERAGE_WAIT)
 		{
