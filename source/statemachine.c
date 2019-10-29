@@ -195,7 +195,7 @@ void HandleEventTimout4(struct sStateTableEntry *currentState)
 	currentState->state = currentState->timeout4;
 }
 
-void Init_SysTick()
+void Init_SysTick(void)
 {
 	SysTick->LOAD = (480000000L/16);
 	SysTick->VAL = 0;

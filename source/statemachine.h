@@ -128,6 +128,7 @@ void averageReading(uint8_t * numReadings, int16_t * averageTemp, int16_t * temp
 *
 */
 void printAverageTemperature(int16_t * averageTemp);
-
+void Init_SysTick(void);
+void SysTick_Handler();
 
 #endif /* __STATEMACHINE_H__ */
