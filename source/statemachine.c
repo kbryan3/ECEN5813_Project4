@@ -45,7 +45,7 @@ machine_state stateStateMachine(int16_t * temperature, uint8_t * numReadings, in
 				Init_SysTick();
 				while(g_count < 15)
 				{
-					if(g_testrun = 0)
+					if(g_testrun == 0)
 					{
 						bit = runBIT();
 						if(bit == BITFAIL)
