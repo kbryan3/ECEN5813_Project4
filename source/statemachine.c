@@ -60,7 +60,7 @@ machine_state stateStateMachine(int16_t * temperature, uint8_t * numReadings, in
 						Init_SysTick();
 					}
 				}
-				if(state = DISCONNECTED)
+				if(state == DISCONNECTED)
 				{
 					NVIC_DisableIRQ(SysTick_IRQn);
 					break;
