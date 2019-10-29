@@ -41,15 +41,43 @@ machine_state stateStateMachine(int16_t * temperature, uint8_t * numReadings, in
 				averageReading(numReadings, averageTemp, temperature);
 				printAverageTemperature(averageTemp);
 				//wait for 15 seconds
-				timeout_count++;
-				if(timeout_count < 4)
+				NVIC_EnableIRQ(SysTick_IRQn);
+				Init_SysTick();
+				while(g_count < 15)
 				{
-					state = TEMP_READING;
+					if(g_testrun = 0)
+					{
+						bit = runBIT();
+						if(bit == BITFAIL)
+						{
+							state = DISCONNECTED;
+							NVIC_DisableIRQ(SysTick_IRQn);
+							break;
+						}
+					}
+					else
+					{
+						Init_SysTick();
+					}
+				}
+				if(state = DISCONNECTED)
+				{
+					NVIC_DisableIRQ(SysTick_IRQn);
 					break;
 				}
 				else
 				{
-					return state;
+					NVIC_DisableIRQ(SysTick_IRQn);
+					timeout_count++;
+					if(timeout_count < 4)
+					{
+						state = TEMP_READING;
+						break;
+					}
+					else
+					{
+						return state;
+					}
 				}
 			case TEMP_ALERT :
 				//set LED Blue
@@ -165,4 +193,19 @@ void HandleEventTimout3(struct sStateTableEntry *currentState)
 void HandleEventTimout4(struct sStateTableEntry *currentState)
 {
 	currentState->state = currentState->timeout4;
+}
+
+void Init_SysTick()
+{
+	SysTick->LOAD = (480000000L/16);
+	SysTick->VAL = 0;
+	SysTick->CTRL = SysTick_CTRL_TICKINT_Msk | SysTick_CTRL_ENABLE_Msk;
+}
+
+void SysTick_Handler()
+{
+	__disable_irq();
+	g_testrun = 1;
+	g_count++;
+	__enable_irq();
 }

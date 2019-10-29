@@ -51,6 +51,7 @@ board: FRDM-KL25Z
 #define MCG_PLL_DISABLE                                   0U  /*!< MCGPLLCLK disabled */
 #define OSC_CAP0P                                         0U  /*!< Oscillator 0pF capacitor load */
 #define OSC_ER_CLK_DISABLE                                0U  /*!< Disable external reference clock */
+#define RTC_CLKIN_32768HZ                             32768U  /*!< RTC_CLKIN frequency: 32768Hz */
 #define SIM_OSC32KSEL_LPO_CLK                             3U  /*!< OSC32KSEL select: LPO clock */
 #define SIM_PLLFLLSEL_MCGFLLCLK_CLK                       0U  /*!< PLLFLL select: MCGFLLCLK clock */
 #define SIM_PLLFLLSEL_MCGPLLCLK_CLK                       1U  /*!< PLLFLL select: MCGPLLCLK clock */
@@ -125,6 +126,7 @@ settings:
 - {id: SIM.USBSRCSEL.sel, value: SIM.PLLFLLSEL}
 sources:
 - {id: OSC.OSC.outFreq, value: 8 MHz, enabled: true}
+- {id: SIM.RTC_CLK_EXT_IN.outFreq, value: 32.768 kHz, enabled: true}
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS **********/
 /* clang-format on */
 
@@ -169,6 +171,8 @@ const osc_config_t oscConfig_BOARD_BootClockRUN =
  ******************************************************************************/
 void BOARD_BootClockRUN(void)
 {
+    /* Use RTC_CLKIN input clock directly. */
+    CLOCK_SetXtal32Freq(RTC_CLKIN_32768HZ);
     /* Set the system clock dividers in SIM to safe value. */
     CLOCK_SetSimSafeDivs();
     /* Initializes OSC0 according to board configuration. */

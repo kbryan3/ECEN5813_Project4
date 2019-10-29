@@ -63,6 +63,8 @@ struct sStateTableEntry stateTablex[] ={
 
 _Bool log_a;
 uint8_t  result;
+uint8_t g_count;
+uint8_t g_testrun;
 
 logger_level log_level;
 //machine_state states;
@@ -105,6 +107,8 @@ int main(void) {
     alertLowTemp[1] = 0; //bottom byte of alert register(signed)
     log_a = 1;
     log_level = DBUG;
+    g_count = 0;
+    g_testrun = 0;
 
     /* Enter an infinite loop*/
     while(1)
