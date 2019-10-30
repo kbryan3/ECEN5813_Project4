@@ -50,5 +50,13 @@ void getTemperature(int16_t * temperature);
 */
 void printTemperature(int16_t * temperature);
 
+/**
+* @brief Initializes the alert pin(PTD0) on the FRDM board
+*
+*
+*/
+void initAlertPinInterrupt();
+
+
 
 #endif /* __TMP102_H__ */

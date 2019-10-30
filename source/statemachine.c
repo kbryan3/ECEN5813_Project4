@@ -23,27 +23,40 @@ machine_state stateStateMachine(int16_t * temperature, uint8_t * numReadings, in
 		switch(state)
 		{
 			case TEMP_READING : //get temperature
+				//enable GPIO IRQ
+				NVIC_EnableIRQ(PORTD_IRQn);
 				//set LED Green
 		    	toggleLED(1);
 		    	bit = runBIT();
 		    	if(bit == BITFAIL)
 		    	{
+		    		NVIC_DisableIRQ(PORTD_IRQn);
 		    		state = DISCONNECTED;
 		    		break;
 		    	}
 				getTemperature(temperature);
-				state = AVERAGE_WAIT;
+				if(g_alert == 1)
+				{
+					state = TEMP_ALERT;
+				}
+				else
+				{
+					state = AVERAGE_WAIT;
+				}
 				break;
 			case AVERAGE_WAIT : //average temperature and wair
+				//Disable Interrupt for Alert
+				NVIC_DisableIRQ(PORTD_IRQn);
 				//set LED Green
 		    	toggleLED(1);
 				(*numReadings)++;
 				averageReading(numReadings, averageTemp, temperature);
 				printAverageTemperature(averageTemp);
 				//wait for 15 seconds
-				NVIC_EnableIRQ(SysTick_IRQn);
-				Init_SysTick();
-				while(g_count < 15)
+				bit = runBIT();
+//				NVIC_EnableIRQ(SysTick_IRQn);
+//				Init_SysTick();
+/*				while(g_count < 15)
 				{
 					if(g_testrun == 0)
 					{
@@ -51,7 +64,7 @@ machine_state stateStateMachine(int16_t * temperature, uint8_t * numReadings, in
 						if(bit == BITFAIL)
 						{
 							state = DISCONNECTED;
-							NVIC_DisableIRQ(SysTick_IRQn);
+//							NVIC_DisableIRQ(SysTick_IRQn);
 							break;
 						}
 					}
@@ -59,15 +72,15 @@ machine_state stateStateMachine(int16_t * temperature, uint8_t * numReadings, in
 					{
 						Init_SysTick();
 					}
-				}
+				}*/
 				if(state == DISCONNECTED)
 				{
-					NVIC_DisableIRQ(SysTick_IRQn);
+//					NVIC_DisableIRQ(SysTick_IRQn);
 					break;
 				}
 				else
 				{
-					NVIC_DisableIRQ(SysTick_IRQn);
+//					NVIC_DisableIRQ(SysTick_IRQn);
 					timeout_count++;
 					if(timeout_count < 4)
 					{
@@ -80,9 +93,10 @@ machine_state stateStateMachine(int16_t * temperature, uint8_t * numReadings, in
 					}
 				}
 			case TEMP_ALERT :
+				//Disable Interrupt for Alert
+				NVIC_DisableIRQ(PORTD_IRQn);
 				//set LED Blue
 		    	toggleLED(2);
-				//disable interrupts for alert transitions
 				getTemperature(temperature);
 				state = AVERAGE_WAIT;
 				break;
@@ -208,4 +222,10 @@ void SysTick_Handler()
 	g_testrun = 1;
 	g_count++;
 	__enable_irq();
+}
+
+void PORTD_IRQHandler(void)
+{
+	__disable_irq();
+
 }

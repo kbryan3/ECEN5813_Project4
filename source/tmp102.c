@@ -16,6 +16,7 @@ void enableInterruptMode()
 	regValue[0] = 0x62;
 	regValue[1] = 0xA0;
 	i2cWriteBytes(0x90, 0x01, regValue, 2);
+	initAlertPinInterrupt();
 }
 void setAlertLow(uint8_t * tempLow)
 {
@@ -47,6 +48,22 @@ void printTemperature(int16_t * temperature)
 	printTemp = ((int32_t)*temperature) * .0625;
 	log_string((uint8_t*)"Temperature: ",log_level, PRINTTEMPERATURE);
 	PRINTF("%d\n\r", printTemp);
+
+}
+
+void initAlertPinInterrupt()
+{
+	//turn on port D clock
+//	SIM->SCGC5 |= SIM_SCGC5_PORTD_MASK;
+
+	//set PTD0 as input
+	GPIOD->PDDR &= ~(0x01);
+
+	//set PTD0 w/ pull-up
+	PORTD->PCR[0] |= (PORT_PCR_PE_MASK|PORT_PCR_PS_MASK);
+
+	//configure interrupt for PTD0 on falling edge
+	PORTD->PCR[0] |= 0xA00U;
 
 }
 

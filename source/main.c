@@ -65,6 +65,7 @@ _Bool log_a;
 uint8_t  result;
 uint8_t g_count;
 uint8_t g_testrun;
+uint8_t g_alert;
 
 logger_level log_level;
 //machine_state states;
@@ -109,6 +110,7 @@ int main(void) {
     log_level = DBUG;
     g_count = 0;
     g_testrun = 0;
+    g_alert = 0;
 
     /* Enter an infinite loop*/
     while(1)

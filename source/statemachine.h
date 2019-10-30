@@ -14,7 +14,6 @@
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <time.h>
 
 
 #include "board.h"
@@ -51,6 +50,7 @@ struct sStateTableEntry
 
 extern uint8_t g_count;
 extern uint8_t g_testrun;
+extern uint8_t g_alert;
 
 
 /**
