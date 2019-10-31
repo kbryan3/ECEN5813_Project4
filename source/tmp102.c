@@ -63,7 +63,16 @@ void initAlertPinInterrupt()
 	PORTA->PCR[4] |= (PORT_PCR_PE_MASK|PORT_PCR_PS_MASK);
 
 	//configure interrupt for PTA4 on low
-	PORTA->PCR[4] |= 0x800U;
+	//PORTA->PCR[4] |= 0x800U;
+	uint32_t data;
+	while(1)
+	{
+
+		data = GPIOA->PDIR & 0x10;
+		PRINTF("%d\n\r", data);
+	}
+
+	NVIC_EnableIRQ(PORTA_IRQn);
 
 }
 

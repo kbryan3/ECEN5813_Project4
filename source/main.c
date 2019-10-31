@@ -49,7 +49,7 @@
 #include "bit.h"
 #include "Testsuite.h"
 
-#define TEST;
+//#define TEST;
 
 const uint8_t RED = 0;
 const uint8_t GREEN = 1;
