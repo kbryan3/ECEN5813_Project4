@@ -156,5 +156,18 @@ void printFunction(function_called func)
 	{
 		PRINTF("getTemperature(): ");
 	}
+	else if(func == TEST_POINTERS)//Test pointers() called
+	{
+		PRINTF("testPointers(): ");
+	}
+	else if(func == SYSTEMSHUTDOWN)
+	{
+		PRINTF("systemShutdown(): ");
+	}
+	else if(func == TESTSUITE)
+	{
+		PRINTF("testSuite(): ");
+	}
+
 }
 

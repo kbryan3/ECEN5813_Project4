@@ -39,7 +39,10 @@ typedef enum function_called
 	SETALERTLOW, //function 2 called
 	PRINTTEMPERATURE, //printTemperature() called
 	PRINTAVERAGETEMPERATURE, //printAverageTemperature()
-	GETTEMPERATURE //getTemperature() called
+	GETTEMPERATURE, //getTemperature() called
+	TEST_POINTERS, //Test pointers() called
+	SYSTEMSHUTDOWN, //shutdown function called
+	TESTSUITE //testSuite() called
 }function_called;
 
 extern _Bool log_a;

@@ -1,5 +1,5 @@
-source/main.o source/main.d: ../source/main.c ../board/board.h \
- ../board/clock_config.h ../drivers/fsl_common.h \
+source/System.o source/System.d: ../source/System.c ../source/System.h \
+ ../board/board.h ../board/clock_config.h ../drivers/fsl_common.h \
  ../CMSIS/fsl_device_registers.h ../CMSIS/MKL25Z4.h \
  ../CMSIS/core_cm0plus.h ../CMSIS/core_cmInstr.h ../CMSIS/cmsis_gcc.h \
  ../CMSIS/core_cmFunc.h ../CMSIS/system_MKL25Z4.h \
@@ -8,7 +8,9 @@ source/main.o source/main.d: ../source/main.c ../board/board.h \
  ../board/pin_mux.h ../board/clock_config.h ../CMSIS/MKL25Z4.h \
  ../utilities/fsl_debug_console.h ../source/led_control.h ../source/i2c.h \
  ../source/logger.h ../source/tmp102.h ../source/statemachine.h \
- ../source/bit.h ../source/Testsuite.h
+ ../source/bit.h
+
+../source/System.h:
 
 ../board/board.h:
 
@@ -59,5 +61,3 @@ source/main.o source/main.d: ../source/main.c ../board/board.h \
 ../source/statemachine.h:
 
 ../source/bit.h:
-
-../source/Testsuite.h:

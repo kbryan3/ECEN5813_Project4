@@ -4,6 +4,8 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS += \
+../source/System.c \
+../source/Testsuite.c \
 ../source/bit.c \
 ../source/i2c.c \
 ../source/led_control.c \
@@ -16,6 +18,8 @@ C_SRCS += \
 ../source/tmp102.c 
 
 OBJS += \
+./source/System.o \
+./source/Testsuite.o \
 ./source/bit.o \
 ./source/i2c.o \
 ./source/led_control.o \
@@ -28,6 +32,8 @@ OBJS += \
 ./source/tmp102.o 
 
 C_DEPS += \
+./source/System.d \
+./source/Testsuite.d \
 ./source/bit.d \
 ./source/i2c.d \
 ./source/led_control.d \

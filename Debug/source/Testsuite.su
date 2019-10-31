@@ -1,0 +1,3 @@
+Testsuite.c:57:13:Test_BasicChecks	32	static
+Testsuite.c:80:13:Test_Pointers	24	static
+Testsuite.c:112:5:testSuite	8	static
