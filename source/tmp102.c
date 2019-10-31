@@ -53,17 +53,17 @@ void printTemperature(int16_t * temperature)
 
 void initAlertPinInterrupt()
 {
-	//turn on port D clock
-//	SIM->SCGC5 |= SIM_SCGC5_PORTD_MASK;
+	//turn on port A clock
+//	SIM->SCGC5 |= SIM_SCGC5_PORTA_MASK;
 
-	//set PTD0 as input
-	GPIOD->PDDR &= ~(0x01);
+	//set PTA4 as input
+	GPIOA->PDDR &= ~(0x20);
 
-	//set PTD0 w/ pull-up
-	PORTD->PCR[0] |= (PORT_PCR_PE_MASK|PORT_PCR_PS_MASK);
+	//set PTA4 w/ pull-up
+	PORTA->PCR[4] |= (PORT_PCR_PE_MASK|PORT_PCR_PS_MASK);
 
-	//configure interrupt for PTD0 on falling edge
-	PORTD->PCR[0] |= 0xA00U;
+	//configure interrupt for PTA4 on low
+	PORTA->PCR[4] |= 0x800U;
 
 }
 

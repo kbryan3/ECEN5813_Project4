@@ -24,17 +24,19 @@ machine_state stateStateMachine(int16_t * temperature, uint8_t * numReadings, in
 		{
 			case TEMP_READING : //get temperature
 				//enable GPIO IRQ
-				NVIC_EnableIRQ(PORTD_IRQn);
+				NVIC_EnableIRQ(PORTA_IRQn);
 				//set LED Green
 		    	toggleLED(1);
+		    	//check for disconnect
 		    	bit = runBIT();
 		    	if(bit == BITFAIL)
 		    	{
-		    		NVIC_DisableIRQ(PORTD_IRQn);
+		    	//	NVIC_DisableIRQ(PORTD_IRQn);
 		    		state = DISCONNECTED;
 		    		break;
 		    	}
 				getTemperature(temperature);
+				//if tmp102 alert has occured go to TEMP_ALERT state
 				if(g_alert == 1)
 				{
 					state = TEMP_ALERT;
@@ -46,14 +48,27 @@ machine_state stateStateMachine(int16_t * temperature, uint8_t * numReadings, in
 				break;
 			case AVERAGE_WAIT : //average temperature and wair
 				//Disable Interrupt for Alert
-				NVIC_DisableIRQ(PORTD_IRQn);
+			//	NVIC_DisableIRQ(PORTD_IRQn);
 				//set LED Green
 		    	toggleLED(1);
 				(*numReadings)++;
 				averageReading(numReadings, averageTemp, temperature);
 				printAverageTemperature(averageTemp);
-				//wait for 15 seconds
-				bit = runBIT();
+				//wait for 5 seconds
+				for(uint8_t i = 0; i < 5; i++)
+				{
+					bit=runBIT();
+					if(bit == BITFAIL)
+					{
+						state = DISCONNECTED;
+						break;
+					}
+					else
+					{
+						delay1s();
+					}
+				}
+//				bit = runBIT();
 //				NVIC_EnableIRQ(SysTick_IRQn);
 //				Init_SysTick();
 /*				while(g_count < 15)
@@ -94,7 +109,7 @@ machine_state stateStateMachine(int16_t * temperature, uint8_t * numReadings, in
 				}
 			case TEMP_ALERT :
 				//Disable Interrupt for Alert
-				NVIC_DisableIRQ(PORTD_IRQn);
+	//			NVIC_DisableIRQ(PORTD_IRQn);
 				//set LED Blue
 		    	toggleLED(2);
 				getTemperature(temperature);
@@ -224,8 +239,20 @@ void SysTick_Handler()
 	__enable_irq();
 }
 
-void PORTD_IRQHandler(void)
+void PORTA_IRQHandler(void)
 {
 	__disable_irq();
+	g_alert = 1;
+	__enable_irq();
 
+}
+
+void delay1s()
+{
+	uint32_t number = 4166667;
+	while(number !=0)
+	{
+		__asm volatile("nop");
+		number--;
+	}
 }

@@ -130,4 +130,11 @@ void averageReading(uint8_t * numReadings, int16_t * averageTemp, int16_t * temp
 void printAverageTemperature(int16_t * averageTemp);
 void Init_SysTick(void);
 
+/**
+* @brief creates a 1s delay
+*
+*
+*/
+void delay1s();
+
 #endif /* __STATEMACHINE_H__ */
