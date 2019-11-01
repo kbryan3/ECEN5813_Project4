@@ -1,54 +1,211 @@
-################################################################################
-# Automatically-generated file. Do not edit!
-################################################################################
-
--include ../makefile.init
-
+##########################
+#
+#@brief: Custom makefile to build PC and FB projects
+#
+# This makefile builds 2 different files(.axf for FB and .out for PC)
+# User must call the correct target and then if creating the .out add
+# TARGET = PC which tells the makefule to select the proper settings/files
+# for generating the PC version of the application
+# targets include: fb_run, fb_debug, pc_run, pc_debug
+#
+# @author Kyle Bryan
+# @date October 2019
+# version 1.0
+#
+#based off of the example given in the project 2 description given in class
+# https://mcuoneclipse.com/s017/07/22/tutorial-makefile-projects-with-eclipse/
+###########################
+# Command for removing files
 RM := rm -rf
 
-# All of the sources participating in the build are defined here
--include sources.mk
--include utilities/subdir.mk
--include startup/subdir.mk
--include source/subdir.mk
--include drivers/subdir.mk
--include board/subdir.mk
--include CMSIS/subdir.mk
--include subdir.mk
--include objects.mk
+############################
+# Compiler
+ifneq ($(TARGET), PC)
+	CC = arm-none-eabi-gcc
+else
+	CC = gcc
+endif
+############################
+# Linker
+ifneq ($(TARGET), PC)
+	LL = arm-none-eabi-gcc
+else
+	LL = gcc
+endif
+############################
+# Binary/exectable to build
+ifneq ($(TARGET), PC)
+	EXE = project4.axf
+else
+	EXE = project4.out
+endif
+############################
+# List of object files
+OBJS_FB := \
+	./source/main.o \
+	./source/led_control.o \
+	./source/logger.o \
+	./source/bit.o \
+	./source/i2c.o \
+	./source/statemachine.o \
+	./source/System.o \
+	./source/Testsuite.o \
+	./source/tmp102.o \
+	./source/mtb.o \
+	./source/semihost_hardfault.o \
+	./startup/startup_mkl25z4.o \
+	./CMSIS/system_MKL25Z4.o \
+	./utilities/fsl_debug_console.o \
+	./drivers/fsl_clock.o \
+	./drivers/fsl_common.o \
+	./drivers/fsl_flash.o \
+	./drivers/fsl_gpio.o \
+	./drivers/fsl_lpsci.o \
+	./drivers/fsl_smc.o \
+	./drivers/fsl_uart.o \
+	./board/board.o \
+	./board/clock_config.o \
+	./board/peripherals.o \
+	./board/pin_mux.o
 
+OBJS_PC := \
+	./source/main.o \
+	./source/logger.o \
+	./source/memory_test.o \
+	./source/pattern_generator.o
+
+ifneq ($(TARGET), PC)
+	OBJS = $(OBJS_FB)
+else
+	OBJS = $(OBJS_PC)
+endif
+
+
+############################
+# List of dependency files
+C_DEPS_FB := \
+ 	./board/*.d \
+ 	./CMSIS/*.d \
+ 	./drivers/*.d \
+ 	./source/*.d \
+ 	./startup/*.d \
+ 	./utilities/*.d
+
+C_DEPS_PC := \
+	./source/main.d \
+	./source/logger.d \
+	./source/memory_test.d \
+	./source/pattern_generator.d
+
+ifneq ($(TARGET), PC)
+	C_DEPS = $(C_DEPS_FB)
+else
+	C_DEPS = $(C_DEPS_PC)
+endif
+
+############################
+# Include generated dependcy files (only if not clean target)
 ifneq ($(MAKECMDGOALS),clean)
 ifneq ($(strip $(C_DEPS)),)
 -include $(C_DEPS)
 endif
 endif
 
--include ../makefile.defs
+############################
+#Includes
+INC = -I../board -I../source -I../ -I../drivers -I../CMSIS -I../utilities -I../startup
 
-# Add inputs and outputs from these tool invocations to the build variables 
+############################
+# Compiler options
+ifneq ($(TARGET), PC)
+	CC_OPTIONS = -c -std=gnu99 -O0 -g -ffunction-sections -fdata-sections -fno-builtin -mcpu=cortex-m0plus -mthumb -DCPU_MKL25Z128VLK4 -D__USE_CMSIS $(INC)
+else
+	CC_OPTIONS = -O0 -c -g $(INC) -DPC
+endif
+############################
+# Linker Options
+ifneq ($(TARGET), PC)
+	LL_OPTIONS = -nostdlib -Xlinker -Map="project4.map" -Xlinker --gc-sections -Xlinker -print-memory-usage -mcpu=cortex-m0plus -mthumb -T project4_Debug.ld -o $(EXE)
+else
+	LL_OPTIONS =
+endif
 
-# All Target
-all: project4.axf
 
-# Tool invocations
-project4.axf: $(OBJS) $(USER_OBJS)
+############################
+# Main targets
+fb_status: $(EXE)
+	@echo "*** finished building ***"
+
+fb_test: CC_OPTIONS += -DUCUNITTEST
+fb_test: $(EXE)
+	@echo "*** finished building ***"
+
+fb_debug: CC_OPTIONS += -DDEBUGGING
+fb_debug: $(EXE)
+	@echo "*** finished building ***"
+
+############################
+# Clean target
+clean:
+	-$(RM) $(EXECUTABLES) $(OBJS_FB) $(EXE)
+	-$(RM) ./Debug/*.map
+	-@echo ' '
+
+############################
+# Rule to link the executable
+$(EXE): $(OBJS) $(USER_OBJS)
 	@echo 'Building target: $@'
-	@echo 'Invoking: MCU Linker'
-	arm-none-eabi-gcc -nostdlib -Xlinker -Map="project4.map" -Xlinker --gc-sections -Xlinker -print-memory-usage -Xlinker --sort-section=alignment -Xlinker --cref -mcpu=cortex-m0plus -mthumb -T project4_Debug.ld -o "project4.axf" $(OBJS) $(USER_OBJS) $(LIBS)
+	@echo 'Invoking: Linker'
+	$(LL) $(LL_OPTIONS) $(OBJS) $(LIBS)
 	@echo 'Finished building target: $@'
 	@echo ' '
-	$(MAKE) --no-print-directory post-build
 
-# Other Targets
-clean:
-	-$(RM) $(EXECUTABLES)$(OBJS)$(C_DEPS) project4.axf
-	-@echo ' '
 
-post-build:
-	-@echo 'Performing post-build steps'
-	-arm-none-eabi-size "project4.axf"; # arm-none-eabi-objcopy -v -O binary "project4.axf" "project4.bin" ; # checksum -p MKL25Z128xxx4 -d "project4.bin";
-	-@echo ' '
 
-.PHONY: all clean dependents post-build
+############################
+# Rule to build the files in the source folder
+source/%.o: ../source/%.c
+	@echo 'Building file: $<'
+	$(CC) $(CC_OPTIONS) -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)" -MT"$(@:%.o=%.d)" -o "$@" "$<"
+	@echo 'Finished building: $<'
+	@echo ' '
 
--include ../makefile.targets
+############################
+# Rule to build the files in the CMSIS folder
+CMSIS/%.o: ../CMSIS/%.c
+	@echo 'Building file: $<'
+	$(CC) $(CC_OPTIONS) -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)" -MT"$(@:%.o=%.d)" -o "$@" "$<"
+	@echo 'Finished building: $<'
+	@echo ' '
+
+	############################
+# Rule to build the files in the startup folder
+startup/%.o: ../startup/%.c
+	@echo 'Building file: $<'
+	$(CC) $(CC_OPTIONS) -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)" -MT"$(@:%.o=%.d)" -o "$@" "$<"
+	@echo 'Finished building: $<'
+	@echo ' '
+
+	############################
+# Rule to build the files in the utilities folder
+utilities/%.o: ../utilities/%.c
+	@echo 'Building file: $<'
+	$(CC) $(CC_OPTIONS) -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)" -MT"$(@:%.o=%.d)" -o "$@" "$<"
+	@echo 'Finished building: $<'
+	@echo ' '
+
+	############################
+# Rule to build the files in the board folder
+board/%.o: ../board/%.c
+	@echo 'Building file: $<'
+	$(CC) $(CC_OPTIONS) -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)" -MT"$(@:%.o=%.d)" -o "$@" "$<"
+	@echo 'Finished building: $<'
+	@echo ' '
+
+	############################
+# Rule to build the files in the drivers folder
+drivers/%.o: ../drivers/%.c
+	@echo 'Building file: $<'
+	$(CC) $(CC_OPTIONS) -MMD -MP -MF"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)" -MT"$(@:%.o=%.d)" -o "$@" "$<"
+	@echo 'Finished building: $<'
+	@echo ' '

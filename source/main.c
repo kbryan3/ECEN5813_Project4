@@ -92,6 +92,7 @@ my_bit_result bit;
  * @brief   Application entry point.
  */
 int main(void) {
+	log_level = STATUS;
 #ifndef UCUNITTEST
 
 	/* Init board hardware. */

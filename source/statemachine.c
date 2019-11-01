@@ -15,6 +15,10 @@
 
 machine_state stateStateMachine(int16_t * temperature, uint8_t * numReadings, int16_t * averageTemp)
 {
+	if(!temperature || !numReadings || !averageTemp)
+	{
+		return DISCONNECTED;
+	}
 	machine_state state = TEMP_READING;
 	my_bit_result bit = PASS;
 	uint8_t timeout_count = 0;
@@ -57,7 +61,7 @@ machine_state stateStateMachine(int16_t * temperature, uint8_t * numReadings, in
 				averageReading(numReadings, averageTemp, temperature);
 				printAverageTemperature(averageTemp);
 				//wait for 5 seconds
-				for(uint8_t i = 0; i < 5; i++)
+				for(uint8_t i = 0; i < 15; i++)
 				{
 					bit=runBIT();
 					if(bit == BITFAIL)
@@ -158,8 +162,8 @@ machine_state stateTableMachine(int16_t * temperature, uint8_t * numReadings, in
 			(*numReadings)++;
 			averageReading(numReadings, averageTemp, temperature);
 			printAverageTemperature(averageTemp);
-			//wait for 5 seconds
-			for(uint8_t i = 0; i < 5; i++)
+			//wait for 15 seconds
+			for(uint8_t i = 0; i < 15; i++)
 			{
 				bit=runBIT();
 				if(bit == BITFAIL)
