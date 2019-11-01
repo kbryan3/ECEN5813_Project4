@@ -30,7 +30,19 @@
 
 /**
  * @file    main.c
- * @brief   Application entry point.
+ * @brief   Application entry point to run a Temperature Sensing Program
+ *
+ * This program averages and prints the temperature from the tmp102 sensor.  It
+ *  goes through 2 different state machines that have the same function but one
+ * is state based and the other is table based.  There are three build options
+ * for this program(TEST, DBUG, STATUS).
+ *  TEST- runs UCunit Framework and not complete program and prints results
+ *  DBUG - will print program information as well as temperature readouts
+ *  STATUS - will only print out temperature readouts
+ *
+ * The LED on the FRDM board will also be used to show all good(green),
+ *  alert(blue), disconnected(red).  Once disconnected the program breaks from
+ * the state machines and will need ot be restarted.
  */
 #include <stdio.h>
 #include <stdlib.h>
@@ -48,8 +60,6 @@
 #include "statemachine.h"
 #include "bit.h"
 #include "Testsuite.h"
-
-//#define TEST;
 
 const uint8_t RED = 0;
 const uint8_t GREEN = 1;
@@ -81,12 +91,21 @@ my_bit_result bit;
  */
 int main(void) {
 #ifndef TEST
-  	/* Init board hardware. */
+
+	/* Init board hardware. */
     BOARD_InitBootPins();
     BOARD_InitBootClocks();
     BOARD_InitBootPeripherals();
   	/* Init FSL debug console. */
     BOARD_InitDebugConsole();
+		//turn logger on and set status
+		log_a = 1;
+#ifdef DEBUG
+	log_level = DBUG;
+#else
+	log_level = STATUS;
+#endif
+
     initializeLEDs();
     toggleLED(OFF);
     i2cInit();
@@ -108,8 +127,6 @@ int main(void) {
     *numReadings = 0;
     alertLowTemp[0] = 0; //set the top byte of alert register(signed)
     alertLowTemp[1] = 0; //bottom byte of alert register(signed)
-    log_a = 1;
-    log_level = DBUG;
     g_count = 0;
     g_testrun = 0;
     g_alert = 0;
@@ -140,6 +157,7 @@ int main(void) {
     return 0;
 #else
     log_a = 1;
+		log_level = TEST;
     uint32_t test = testSuite();
 #endif
 }

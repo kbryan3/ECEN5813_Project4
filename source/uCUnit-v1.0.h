@@ -34,8 +34,8 @@
  * author.
  */
 
-#ifndef UCUNIT_0101_H_
-#define UCUNIT_0101_H_
+#ifndef UCUNIT_H_
+#define UCUNIT_H_
 
 /*****************************************************************************/
 /****** Customizing area ******/
@@ -257,7 +257,7 @@ static int ucunit_index = 0; /* Tracepoint index */
         UCUNIT_WriteString(msg);                                \
         UCUNIT_WriteString("(");                                \
         UCUNIT_WriteString(args);                               \
-        UCUNIT_WriteString(")\n");                              \
+        UCUNIT_WriteString(")\n\r");                              \
     } while(0)
 #else
 #define UCUNIT_WritePassedMsg(msg, args)
@@ -290,7 +290,7 @@ static int ucunit_index = 0; /* Tracepoint index */
         UCUNIT_WriteString(msg);                                \
         UCUNIT_WriteString("(");                                \
         UCUNIT_WriteString(args);                               \
-        UCUNIT_WriteString(")\n");                              \
+        UCUNIT_WriteString(")\n\r");                              \
     } while(0)
 #endif
 

@@ -3,7 +3,10 @@
 * @file logger.h
 * @brief Contains multiple functions to log/print debug info and data
 *
-*
+* There are three modes the logger can be in TEST, DBUG, STATUS
+*  TEST- will print ucUnit messages(only runs the uCUnit, not full program)
+*  DBUG - will print program information as well as temperature readouts
+*  STATUS - will only print out temperature readouts
 *
 *
 * @author Kyle Bryan
@@ -42,7 +45,10 @@ typedef enum function_called
 	GETTEMPERATURE, //getTemperature() called
 	TEST_POINTERS, //Test pointers() called
 	SYSTEMSHUTDOWN, //shutdown function called
-	TESTSUITE //testSuite() called
+	TESTSUITE, //testSuite() called
+	RUNBIT, //runBut() called
+	STATESTATEMACHINE, //stateStateMachine() called
+	STATETABLEMACHINE //stateTableMachine() called
 }function_called;
 
 extern _Bool log_a;
@@ -91,7 +97,7 @@ void log_data(uint32_t * loc, size_t length, logger_level level, function_called
 * @brief Prints a given String
 *
 * @param uint8_t * pointer to an address that is same value as string
-* 
+*
 * @return void
 */
 void log_string(uint8_t * str, logger_level level, function_called func);

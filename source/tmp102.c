@@ -22,7 +22,7 @@ void setAlertLow(uint8_t * tempLow)
 {
 
 	i2cWriteBytes(0x90, 0x02, tempLow, 2);
-	log_string((uint8_t*)"Temp Low Set",log_level, SETALERTLOW);
+	log_string((uint8_t*)"Temp Low Set",DBUG, SETALERTLOW);
 
 }
 
@@ -39,14 +39,16 @@ void getTemperature(int16_t * temperature)
 	*temperature |= ((rawTemp[1]) >> 4);
 	*temperature = (*temperature & 0x800) ? (*temperature|0xF000) : *temperature;
 	free(rawTemp);
-	log_temp(temperature, log_level, GETTEMPERATURE);
+	log_temp(temperature, TEST, GETTEMPERATURE);
+	log_temp(temperature, STATUS, GETTEMPERATURE)
 }
 
 void printTemperature(int16_t * temperature)
 {
 	int32_t printTemp;
 	printTemp = ((int32_t)*temperature) * .0625;
-	log_string((uint8_t*)"Temperature: ",log_level, PRINTTEMPERATURE);
+	log_string((uint8_t*)"Temperature: ",DBUG, PRINTTEMPERATURE);
+	log_string((uint8_t*)"Temperature: ",STATUS, PRINTTEMPERATURE);
 	PRINTF("%d\n\r", printTemp);
 
 }
@@ -67,4 +69,3 @@ void initAlertPinInterrupt()
 	PORTA->PCR[4] |= 0x80000U;
 
 }
-

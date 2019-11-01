@@ -39,24 +39,28 @@ void toggleLED(uint8_t ledColor)
 {
 	if(ledColor == 0)
 	{
+		log_string((uint8_t*)"LED RED: ",DBUG, TOGGLELED);
 		LED_GREEN_OFF();
 		LED_BLUE_OFF();
 		LED_RED_ON();
 	}
 	else if(ledColor == 1)
 	{
+		log_string((uint8_t*)"LED GREEN: ",DBUG, TOGGLELED);
 		LED_RED_OFF();
 		LED_BLUE_OFF();
 		LED_GREEN_ON();
 	}
 	else if(ledColor == 2)
 	{
+		log_string((uint8_t*)"LED BLUE: ",DBUG, TOGGLELED);
 		LED_GREEN_OFF();
 		LED_RED_OFF();
 		LED_BLUE_ON();
 	}
 	else
 	{
+		log_string((uint8_t*)"LED OFF: ",DBUG, TOGGLELED);
 		LED_GREEN_OFF();
 		LED_BLUE_OFF();
 		LED_RED_OFF();

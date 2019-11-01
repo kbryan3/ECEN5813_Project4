@@ -34,6 +34,11 @@
  * author.
  */
 
+ /*
+ * Modified by Kyle Bryan to run with temp sensor Project 4
+ *
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include "System.h"
@@ -51,7 +56,7 @@
 #include "bit.h"
 
 #include "System.h"
-#include "uCUnit-v1.0.h"
+#include "uCUnit.h"
 #include "Testsuite.h"
 
 static void Test_BasicChecks()
@@ -112,11 +117,11 @@ static void Test_Pointers()
 int testSuite(void)
 {
     log_level = TEST;
-    log_string((uint8_t*)"Starting ucTest, Results Below:", log_level, TESTSUITE);
+    log_string((uint8_t*)"Starting ucTest, Results Below:", TEST, TESTSUITE);
 	UCUNIT_Init();
     UCUNIT_WriteString("\n\r**************************************");
     UCUNIT_WriteString("\n\rName:     ");
-    UCUNIT_WriteString("uCUnit demo application");
+    UCUNIT_WriteString("uCUnit application");
     UCUNIT_WriteString("\n\rCompiled: ");
     UCUNIT_WriteString(__DATE__);
     UCUNIT_WriteString("\n\rTime:     ");

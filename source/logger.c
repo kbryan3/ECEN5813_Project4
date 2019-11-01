@@ -3,8 +3,10 @@
 * @file logger.c
 * @brief Contains functions to log and print data
 *
-*
-*
+* There are three modes the logger can be in TEST, DBUG, STATUS
+*  TEST- will print ucUnit messages(only runs the uCUnit, not full program)
+*  DBUG - will print program information as well as temperature readouts
+*  STATUS - will only print out temperature readouts
 *
 * @author Kyle Bryan
 * @date October 2019
@@ -49,7 +51,7 @@ _Bool log_status()
 
 void log_data(uint32_t * loc, size_t length, logger_level level, function_called func)
 {
-	if(log_a)
+	if(log_level == level)
 	{
 		uint8_t * bytes_ptr = (uint8_t *)loc;
 
@@ -74,7 +76,7 @@ void log_data(uint32_t * loc, size_t length, logger_level level, function_called
 
 void log_string(uint8_t * str, logger_level level, function_called func)
 {
-	if(log_a)
+	if(log_level==level)
 	{
 #ifndef PC
 		printLevel(level);
@@ -93,7 +95,7 @@ void log_temp(int16_t * temperature,
 {
 	int32_t printTemp;
 	printTemp = ((int32_t)*temperature) * .0625;
-	if(log_a)
+	if(log_level == level)
 	{
 		printLevel(level);
 		printFunction(func);
@@ -104,7 +106,7 @@ void log_temp(int16_t * temperature,
 
 void log_int(uint32_t * integer, logger_level level, function_called func)
 {
-	if(log_a)
+	if(log_level==level)
 	{
 #ifndef PC
 		printLevel(level);
@@ -168,6 +170,17 @@ void printFunction(function_called func)
 	{
 		PRINTF("testSuite(): ");
 	}
+	else if(func == RUNBIT)
+	{
+		PRINTF("runBIT(): ");
+	}
+	else if(func == STATESTATEMACHINE)
+	{
+		PRINTF("stateStateMachine(): ");
+	}
+	else if(func == STATETABLEMACHINE)
+	{
+		PRINTF("stateTableMachine(): ");
+	}
 
 }
-

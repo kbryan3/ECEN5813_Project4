@@ -23,6 +23,7 @@ machine_state stateStateMachine(int16_t * temperature, uint8_t * numReadings, in
 		switch(state)
 		{
 			case TEMP_READING : //get temperature
+			log_string((uint8_t*)"In TEMP_READING State: ",DBUG, STATESTATEMACHINE);
 				//clear Interrupt Flag
 				g_alert = 0;
 				PORTA->PCR[4] |= 0x1000000;
@@ -51,6 +52,7 @@ machine_state stateStateMachine(int16_t * temperature, uint8_t * numReadings, in
 			case AVERAGE_WAIT : //average temperature and wair
 				//Disable Interrupt
 				NVIC_DisableIRQ(PORTA_IRQn);
+				log_string((uint8_t*)"In AVERAGE_WAIT State: ",DBUG, STATESTATEMACHINE);
 				(*numReadings)++;
 				averageReading(numReadings, averageTemp, temperature);
 				printAverageTemperature(averageTemp);
@@ -90,6 +92,7 @@ machine_state stateStateMachine(int16_t * temperature, uint8_t * numReadings, in
 			case TEMP_ALERT :
 				//Disable Interrupt for Alert
 				NVIC_DisableIRQ(PORTA_IRQn);
+				log_string((uint8_t*)"In TEMP_ALERT State: ",DBUG, STATESTATEMACHINE);
 				//set LED Blue
 		    	toggleLED(2);
 		    	//set g_alert to 0
@@ -99,6 +102,7 @@ machine_state stateStateMachine(int16_t * temperature, uint8_t * numReadings, in
 				break;
 			case DISCONNECTED :
 				NVIC_DisableIRQ(PORTA_IRQn);
+				log_string((uint8_t*)"In DISCONNECTED State: ",DBUG, STATESTATEMACHINE);
 				toggleLED(0);
 				return state;
 		}
@@ -118,6 +122,7 @@ machine_state stateTableMachine(int16_t * temperature, uint8_t * numReadings, in
 	{
 		if(cstate->state == TEMP_READING)
 		{
+			log_string((uint8_t*)"In TEMP_READING State: ",DBUG, STATESTATEMACHINE);
 			//clear Interrupt Flag
 			g_alert = 0;
 			PORTA->PCR[4] |= 0x1000000;
@@ -149,6 +154,7 @@ machine_state stateTableMachine(int16_t * temperature, uint8_t * numReadings, in
 		{
 			//Disable Interrupt
 			NVIC_DisableIRQ(PORTA_IRQn);
+			log_string((uint8_t*)"In AVERAGE_WAIT State: ",DBUG, STATESTATEMACHINE);
 			(*numReadings)++;
 			averageReading(numReadings, averageTemp, temperature);
 			printAverageTemperature(averageTemp);
@@ -189,6 +195,7 @@ machine_state stateTableMachine(int16_t * temperature, uint8_t * numReadings, in
 		{
 			//Disable Interrupt for Alert
 			NVIC_DisableIRQ(PORTA_IRQn);
+			log_string((uint8_t*)"In TEMP_ALERT State: ",DBUG, STATESTATEMACHINE);
 			//set LED Blue
 	    	toggleLED(2);
 	    	//set g_alert to 0
@@ -199,6 +206,7 @@ machine_state stateTableMachine(int16_t * temperature, uint8_t * numReadings, in
 		else if(cstate->state == DISCONNECTED)
 		{
 			NVIC_DisableIRQ(PORTA_IRQn);
+			log_string((uint8_t*)"In DISCONNECTED State: ",DBUG, STATESTATEMACHINE);
 			toggleLED(0);
 			return cstate->state;
 		}
@@ -224,7 +232,8 @@ void printAverageTemperature(int16_t * averageTemp)
 {
 	int32_t printTemp;
 	printTemp = ((int32_t)*averageTemp) * .0625;
-	log_string((uint8_t*)"Average Temperature: ",log_level, PRINTAVERAGETEMPERATURE);
+	log_string((uint8_t*)"Average Temperature: ",DBUG, PRINTAVERAGETEMPERATURE);
+	log_string((uint8_t*)"Average Temperature: ",STATUS, PRINTAVERAGETEMPERATURE);
 	PRINTF("%d\n\r", printTemp);
 
 }
