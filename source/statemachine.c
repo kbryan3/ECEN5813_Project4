@@ -18,7 +18,6 @@ machine_state stateStateMachine(int16_t * temperature, uint8_t * numReadings, in
 	machine_state state = TEMP_READING;
 	my_bit_result bit = PASS;
 	uint8_t timeout_count = 0;
-	uint32_t data;
 	while(1)
 	{
 		switch(state)
@@ -27,8 +26,6 @@ machine_state stateStateMachine(int16_t * temperature, uint8_t * numReadings, in
 				//clear Interrupt Flag
 				g_alert = 0;
 				PORTA->PCR[4] |= 0x1000000;
-				data = (GPIOA->PDIR & 0x10);
-				PRINTF("%d\n\r", data);
 				//enable GPIO IRQ
 				NVIC_EnableIRQ(PORTA_IRQn);
 				//set LED Green
@@ -101,6 +98,7 @@ machine_state stateStateMachine(int16_t * temperature, uint8_t * numReadings, in
 				state = AVERAGE_WAIT;
 				break;
 			case DISCONNECTED :
+				NVIC_DisableIRQ(PORTA_IRQn);
 				toggleLED(0);
 				return state;
 		}
@@ -120,45 +118,88 @@ machine_state stateTableMachine(int16_t * temperature, uint8_t * numReadings, in
 	{
 		if(cstate->state == TEMP_READING)
 		{
-	    	toggleLED(1);
-	    	bit = runBIT();
-	    	if(bit == BITFAIL)
-	    	{
-	    		HandleEventDisconnect(cstate);
-	    	}
-	    	else
-	    	{
-	    		getTemperature(temperature);
-	    		HandleEventComplete(cstate);
-	    	}
-		}
-		else if(cstate->state == AVERAGE_WAIT)
-		{
+			//clear Interrupt Flag
+			g_alert = 0;
+			PORTA->PCR[4] |= 0x1000000;
+			//enable GPIO IRQ
+			NVIC_EnableIRQ(PORTA_IRQn);
+			//set LED Green
 			toggleLED(1);
-			(*numReadings)++;
-			averageReading(numReadings, averageTemp, temperature);
-			printAverageTemperature(averageTemp);
-			//wait for 15 seconds
-			timeout_count++;
-			if(timeout_count < 4)
+			//check for disconnect
+			bit = runBIT();
+			if(bit == BITFAIL)
 			{
-				HandleEventTimout3(cstate);
+				HandleEventDisconnect(cstate);
 			}
 			else
 			{
-				return cstate->state;
+				getTemperature(temperature);
+				//if tmp102 alert has occured go to TEMP_ALERT state
+				if(g_alert == 1)
+				{
+					HandleEventAlert(cstate);
+				}
+				else
+				{
+					HandleEventComplete(cstate);
+				}
+			}
+		}
+		else if(cstate->state == AVERAGE_WAIT)
+		{
+			//Disable Interrupt
+			NVIC_DisableIRQ(PORTA_IRQn);
+			(*numReadings)++;
+			averageReading(numReadings, averageTemp, temperature);
+			printAverageTemperature(averageTemp);
+			//wait for 5 seconds
+			for(uint8_t i = 0; i < 5; i++)
+			{
+				bit=runBIT();
+				if(bit == BITFAIL)
+				{
+					HandleEventDisconnect(cstate);
+					break;
+				}
+				else
+				{
+					delay1s();
+					//set LED Green
+			    	toggleLED(1);
+				}
+			}
+			if(cstate->state == DISCONNECTED)
+			{
+				HandleEventDisconnect(cstate);
+			}
+			else
+			{
+				timeout_count++;
+				if(timeout_count < 4)
+				{
+					HandleEventComplete(cstate);
+				}
+				else
+				{
+					return cstate->state;
+				}
 			}
 		}
 		else if(cstate->state == TEMP_ALERT)
 		{
+			//Disable Interrupt for Alert
+			NVIC_DisableIRQ(PORTA_IRQn);
 			//set LED Blue
-			toggleLED(2);
-			//disable interrupts for alert transitions
+	    	toggleLED(2);
+	    	//set g_alert to 0
+	    	g_alert = 0;
 			getTemperature(temperature);
 			HandleEventComplete(cstate);
 		}
 		else if(cstate->state == DISCONNECTED)
 		{
+			NVIC_DisableIRQ(PORTA_IRQn);
+			toggleLED(0);
 			return cstate->state;
 		}
 	}

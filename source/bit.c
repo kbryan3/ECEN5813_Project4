@@ -13,10 +13,14 @@
 
 my_bit_result runBIT()
 {
+
+	uint8_t temp;
+	temp = i2cReadByte(0x90, 0x00);
 	uint8_t temp_result;
+	delay();
 	temp_result = i2cReadByte(0x90, 0x01);
 	//if register read does not return expected value
-	if(temp_result == 98)
+	if((temp_result == 98) && (temp!=temp_result))
 	{
 		return BITPASS;
 	}
@@ -27,5 +31,15 @@ my_bit_result runBIT()
 	else
 	{
 		return BITFAIL;
+	}
+}
+
+void delay()
+{
+	uint32_t number = 667;
+	while(number !=0)
+	{
+		__asm volatile("nop");
+		number--;
 	}
 }

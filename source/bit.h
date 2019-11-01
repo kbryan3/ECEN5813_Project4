@@ -28,5 +28,7 @@ typedef enum my_bit_result
 */
 my_bit_result runBIT();
 
+void delay();
+
 #endif /* __BIT_H__ */
 
