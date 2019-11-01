@@ -105,7 +105,4 @@ uint8_t i2cReadByte(uint8_t dev, uint8_t reg);
 uint8_t i2cReadBytes(uint8_t dev_adx, uint8_t reg_adx, uint8_t * data,
 		int8_t data_count);
 
-uint8_t i2cTest(uint8_t dev, uint8_t reg);
-
-
 #endif /* __I2C_H__ */

@@ -10,7 +10,7 @@
 *
 *
 * @author Kyle Bryan
-* @date October 2019
+* @date November 2019
 * version 1.0
 *
 ***********************************************************************/
@@ -111,6 +111,7 @@ void log_string(uint8_t * str, logger_level level, function_called func);
 */
 void log_temp(int16_t * temperature,
 		logger_level level, function_called func);
+
 /**
 * @brief Prints a given number
 *

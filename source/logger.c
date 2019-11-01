@@ -9,7 +9,7 @@
 *  STATUS - will only print out temperature readouts
 *
 * @author Kyle Bryan
-* @date October 2019
+* @date November 2019
 * version 1.0
 *
 ***********************************************************************/
@@ -51,6 +51,10 @@ _Bool log_status()
 
 void log_data(uint32_t * loc, size_t length, logger_level level, function_called func)
 {
+	if(!loc)
+	{
+		PRINTF("Null Pointer!");
+	}
 	if(log_level == level)
 	{
 		uint8_t * bytes_ptr = (uint8_t *)loc;
@@ -76,6 +80,10 @@ void log_data(uint32_t * loc, size_t length, logger_level level, function_called
 
 void log_string(uint8_t * str, logger_level level, function_called func)
 {
+	if(!str)
+	{
+		PRINTF("Null Pointer!");
+	}
 	if(log_level==level)
 	{
 #ifndef PC
@@ -93,6 +101,10 @@ void log_string(uint8_t * str, logger_level level, function_called func)
 void log_temp(int16_t * temperature,
 		logger_level level, function_called func)
 {
+	if(!temperature)
+	{
+		PRINTF("Null Pointer!");
+	}
 	int32_t printTemp;
 	printTemp = ((int32_t)*temperature) * .0625;
 	if(log_level == level)
@@ -106,6 +118,10 @@ void log_temp(int16_t * temperature,
 
 void log_int(uint32_t * integer, logger_level level, function_called func)
 {
+	if(!integer)
+	{
+		PRINTF("Null Pointer!");
+	}
 	if(log_level==level)
 	{
 #ifndef PC

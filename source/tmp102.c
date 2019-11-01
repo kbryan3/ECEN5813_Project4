@@ -4,7 +4,7 @@
 * @brief Has functions to initialize and read temperature values from tmp102
 *
 * @author Kyle Bryan
-* @date October 2019
+* @date November 2019
 * version 1.0
 *
 ***********************************************************************/
@@ -20,7 +20,10 @@ void enableInterruptMode()
 }
 void setAlertLow(uint8_t * tempLow)
 {
-
+	if(!tempLow)
+	{
+		log_string((uint8_t*)"NULLPOINTER! ",DBUG, SETALERTLOW);
+	}
 	i2cWriteBytes(0x90, 0x02, tempLow, 2);
 	log_string((uint8_t*)"Temp Low Set",DBUG, SETALERTLOW);
 
@@ -29,10 +32,15 @@ void setAlertLow(uint8_t * tempLow)
 
 void getTemperature(int16_t * temperature)
 {
+	if(!temperature)
+	{
+		log_string((uint8_t*)"NULLPOINTER! ",DBUG, GETTEMPERATURE);
+	}
 	uint8_t * rawTemp = (uint8_t *)malloc(2);
 	//read from pointer register 0x00(temperature)
 	//byte 1 is MSB, byte 2 is LSB(T3-T0)
 	i2cReadBytes(0x90,0x00,rawTemp,2);
+	//shift rawTemp to be in memory as MSB|LSB and convert to 16 bits
 	*temperature = 0;
 	*temperature |= ((rawTemp[0]) << 4);
 	*temperature |= ((rawTemp[1]) >> 4);
@@ -44,6 +52,10 @@ void getTemperature(int16_t * temperature)
 
 void printTemperature(int16_t * temperature)
 {
+	if(!temperature)
+	{
+		log_string((uint8_t*)"NULLPOINTER! ",DBUG, PRINTTEMPERATURE);
+	}
 	int32_t printTemp;
 	printTemp = ((int32_t)*temperature) * .0625;
 	log_string((uint8_t*)"Temperature: ",DBUG, PRINTTEMPERATURE);
@@ -54,9 +66,6 @@ void printTemperature(int16_t * temperature)
 
 void initAlertPinInterrupt()
 {
-	//turn on port A clock
-//	SIM->SCGC5 |= SIM_SCGC5_PORTA_MASK;
-
 	//set PTA4 as input
 	GPIOA->PDDR &= ~(0x20);
 

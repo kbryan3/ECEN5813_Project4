@@ -4,9 +4,12 @@
 * @brief Has functions to initialize, read and write via I2C
 *
 * @author Kyle Bryan
-* @date October 2019
+* @date November 2019
 * version 1.0
 *
+*Code for this module was taken from professor's announcement:
+*Embedded Systems Fundamentals with Arm Cortex-M based Microcontrollers,
+*  Dean, 2017, ARM Education Media
 ***********************************************************************/
 
 #include "i2c.h"
@@ -17,10 +20,6 @@ void i2cInit()
 	//clock i2c peripheral and port B
 	SIM->SCGC4 |= SIM_SCGC4_I2C0_MASK;
 	SIM->SCGC5 |= SIM_SCGC5_PORTB_MASK;
-
-	//set pins B0,B1 to I2C function
-//	PORTB->PCR[0] |= PORT_PCR_MUX(5);
-//	PORTB->PCR[1] |= PORT_PCR_MUX(5);
 
 	//set to 400k baud
 	I2C0->F |= I2C_F_ICR(0x11) | I2C_F_MULT(0);

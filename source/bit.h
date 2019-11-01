@@ -4,7 +4,7 @@
 * @brief Contains a function to run BIT
 *
 * @author Kyle Bryan
-* @date October 2019
+* @date November 2019
 * version 1.0
 *
 ***********************************************************************/
@@ -28,7 +28,10 @@ typedef enum my_bit_result
 */
 my_bit_result runBIT();
 
+/**
+* @brief delay to be used between reads(prevents a hangup)
+*
+*/
 void delay();
 
 #endif /* __BIT_H__ */
-

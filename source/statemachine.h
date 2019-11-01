@@ -4,7 +4,7 @@
 * @brief Can be used to run a state based and table based statemachine
 *
 * @author Kyle Bryan
-* @date October 2019
+* @date November 2019
 * version 1.0
 *
 ***********************************************************************/
@@ -128,7 +128,7 @@ void averageReading(uint8_t * numReadings, int16_t * averageTemp, int16_t * temp
 *
 */
 void printAverageTemperature(int16_t * averageTemp);
-void Init_SysTick(void);
+
 
 /**
 * @brief creates a 1s delay

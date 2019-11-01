@@ -4,7 +4,7 @@
 * @brief Can be used to run a state based and table based state machine
 *
 * @author Kyle Bryan
-* @date October 2019
+* @date November 2019
 * version 1.0
 *
 * running average calculation found at:
@@ -110,13 +110,16 @@ machine_state stateStateMachine(int16_t * temperature, uint8_t * numReadings, in
 				toggleLED(0);
 				return state;
 		}
-
 	}
 }
 
 machine_state stateTableMachine(int16_t * temperature, uint8_t * numReadings, int16_t * averageTemp,
 		struct sStateTableEntry *currentState)
 {
+	if(!temperature || !numReadings || !averageTemp || !currentState)
+	{
+		return DISCONNECTED;
+	}
 	struct sStateTableEntry *cstate = (struct sStateTableEntry*)malloc(sizeof(struct sStateTableEntry));
 	*cstate = *currentState;
 	uint8_t timeout_count = 0;
