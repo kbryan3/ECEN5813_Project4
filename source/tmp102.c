@@ -18,6 +18,7 @@ void enableInterruptMode()
 	i2cWriteBytes(0x90, 0x01, regValue, 2);
 	initAlertPinInterrupt();
 }
+
 void setAlertLow(uint8_t * tempLow)
 {
 	if(!tempLow)
@@ -75,5 +76,4 @@ void initAlertPinInterrupt()
 	//configure interrupt for PTA4 on low
 	PORTA->PCR[4] &= 0xFFF0FFFFU;
 	PORTA->PCR[4] |= 0x80000U;
-
 }

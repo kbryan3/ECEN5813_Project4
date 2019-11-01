@@ -133,6 +133,7 @@ int main(void) {
     g_count = 0;
     g_testrun = 0;
     g_alert = 0;
+		setAlertLow(alertLowTemp);
 
     /* Enter an infinite loop*/
     while(1)
