@@ -8,7 +8,7 @@ source/Testsuite.o source/Testsuite.d: ../source/Testsuite.c \
  ../board/pin_mux.h ../board/clock_config.h ../CMSIS/MKL25Z4.h \
  ../utilities/fsl_debug_console.h ../source/led_control.h ../source/i2c.h \
  ../source/logger.h ../source/tmp102.h ../source/statemachine.h \
- ../source/bit.h ../source/uCUnit-v1.0.h ../source/Testsuite.h
+ ../source/bit.h ../source/uCUnit.h ../source/Testsuite.h
 
 ../source/System.h:
 
@@ -62,6 +62,6 @@ source/Testsuite.o source/Testsuite.d: ../source/Testsuite.c \
 
 ../source/bit.h:
 
-../source/uCUnit-v1.0.h:
+../source/uCUnit.h:
 
 ../source/Testsuite.h:

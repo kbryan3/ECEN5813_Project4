@@ -61,6 +61,8 @@
 #include "bit.h"
 #include "Testsuite.h"
 
+//#define STATUS
+
 const uint8_t RED = 0;
 const uint8_t GREEN = 1;
 const uint8_t BLUE = 2;
@@ -90,7 +92,7 @@ my_bit_result bit;
  * @brief   Application entry point.
  */
 int main(void) {
-#ifndef TEST
+#ifndef UCUNITTEST
 
 	/* Init board hardware. */
     BOARD_InitBootPins();
@@ -100,7 +102,7 @@ int main(void) {
     BOARD_InitDebugConsole();
 		//turn logger on and set status
 		log_a = 1;
-#ifdef DEBUG
+#ifdef DEBUGGING
 	log_level = DBUG;
 #else
 	log_level = STATUS;
@@ -157,7 +159,7 @@ int main(void) {
     return 0;
 #else
     log_a = 1;
-		log_level = TEST;
-    uint32_t test = testSuite();
+	log_level = TEST;
+    testSuite();
 #endif
 }

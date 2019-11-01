@@ -101,8 +101,8 @@ static void Test_Pointers()
 //test 9
     UCUNIT_CheckIsNotNull(averageTemp); /* Pass */
 //test 10
-    getTemperature(alertLowTemp);
-    UCUNIT_CheckIsNotNull(alertLowTemp);
+    getTemperature(temperature);
+    UCUNIT_CheckIsNotNull(temperature);
 
     free(temperature);
     free(alertLowTemp);

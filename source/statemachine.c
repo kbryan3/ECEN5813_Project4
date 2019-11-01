@@ -122,7 +122,7 @@ machine_state stateTableMachine(int16_t * temperature, uint8_t * numReadings, in
 	{
 		if(cstate->state == TEMP_READING)
 		{
-			log_string((uint8_t*)"In TEMP_READING State: ",DBUG, STATESTATEMACHINE);
+			log_string((uint8_t*)"In TEMP_READING State: ",DBUG, STATETABLEMACHINE);
 			//clear Interrupt Flag
 			g_alert = 0;
 			PORTA->PCR[4] |= 0x1000000;
@@ -154,7 +154,7 @@ machine_state stateTableMachine(int16_t * temperature, uint8_t * numReadings, in
 		{
 			//Disable Interrupt
 			NVIC_DisableIRQ(PORTA_IRQn);
-			log_string((uint8_t*)"In AVERAGE_WAIT State: ",DBUG, STATESTATEMACHINE);
+			log_string((uint8_t*)"In AVERAGE_WAIT State: ",DBUG, STATETABLEMACHINE);
 			(*numReadings)++;
 			averageReading(numReadings, averageTemp, temperature);
 			printAverageTemperature(averageTemp);
@@ -195,7 +195,7 @@ machine_state stateTableMachine(int16_t * temperature, uint8_t * numReadings, in
 		{
 			//Disable Interrupt for Alert
 			NVIC_DisableIRQ(PORTA_IRQn);
-			log_string((uint8_t*)"In TEMP_ALERT State: ",DBUG, STATESTATEMACHINE);
+			log_string((uint8_t*)"In TEMP_ALERT State: ",DBUG, STATETABLEMACHINE);
 			//set LED Blue
 	    	toggleLED(2);
 	    	//set g_alert to 0
@@ -206,7 +206,7 @@ machine_state stateTableMachine(int16_t * temperature, uint8_t * numReadings, in
 		else if(cstate->state == DISCONNECTED)
 		{
 			NVIC_DisableIRQ(PORTA_IRQn);
-			log_string((uint8_t*)"In DISCONNECTED State: ",DBUG, STATESTATEMACHINE);
+			log_string((uint8_t*)"In DISCONNECTED State: ",DBUG, STATETABLEMACHINE);
 			toggleLED(0);
 			return cstate->state;
 		}

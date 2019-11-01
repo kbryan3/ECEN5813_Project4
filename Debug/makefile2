@@ -133,7 +133,6 @@ endif
 
 ############################
 # Main targets
-fb_test: CC_OPTIONS += -DSTATUS
 fb_test: $(EXE)
 	@echo "*** finished building ***"
 

@@ -2,4 +2,4 @@ tmp102.c:13:6:enableInterruptMode	16	static
 tmp102.c:21:6:setAlertLow	16	static
 tmp102.c:30:6:getTemperature	24	static
 tmp102.c:45:6:printTemperature	32	static
-tmp102.c:54:6:initAlertPinInterrupt	8	static
+tmp102.c:55:6:initAlertPinInterrupt	8	static

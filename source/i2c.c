@@ -103,7 +103,7 @@ uint8_t i2cReadByte(uint8_t dev, uint8_t reg)
 uint8_t i2cReadBytes(uint8_t dev_adx, uint8_t reg_adx, uint8_t *data,
 		int8_t data_count)
 {
-	uint8_t dummy;
+//	uint8_t dummy;
 	int8_t num_bytes_read=0;
 	I2C_TRAN; //set to transmit mode
 	I2C_M_START; //send start
@@ -119,7 +119,7 @@ uint8_t i2cReadBytes(uint8_t dev_adx, uint8_t reg_adx, uint8_t *data,
 
 	I2C_REC;
 	ACK;
-	dummy = I2C0->D;
+	I2C0->D;
 	I2C_WAIT
 	do
 	{
