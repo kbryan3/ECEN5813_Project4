@@ -18,11 +18,17 @@ machine_state stateStateMachine(int16_t * temperature, uint8_t * numReadings, in
 	machine_state state = TEMP_READING;
 	my_bit_result bit = PASS;
 	uint8_t timeout_count = 0;
+	uint32_t data;
 	while(1)
 	{
 		switch(state)
 		{
 			case TEMP_READING : //get temperature
+				//clear Interrupt Flag
+				g_alert = 0;
+				PORTA->PCR[4] |= 0x1000000;
+				data = (GPIOA->PDIR & 0x10);
+				PRINTF("%d\n\r", data);
 				//enable GPIO IRQ
 				NVIC_EnableIRQ(PORTA_IRQn);
 				//set LED Green
@@ -31,7 +37,6 @@ machine_state stateStateMachine(int16_t * temperature, uint8_t * numReadings, in
 		    	bit = runBIT();
 		    	if(bit == BITFAIL)
 		    	{
-		    	//	NVIC_DisableIRQ(PORTD_IRQn);
 		    		state = DISCONNECTED;
 		    		break;
 		    	}
@@ -47,10 +52,8 @@ machine_state stateStateMachine(int16_t * temperature, uint8_t * numReadings, in
 				}
 				break;
 			case AVERAGE_WAIT : //average temperature and wair
-				//Disable Interrupt for Alert
-			//	NVIC_DisableIRQ(PORTD_IRQn);
-				//set LED Green
-		    	toggleLED(1);
+				//Disable Interrupt
+				NVIC_DisableIRQ(PORTA_IRQn);
 				(*numReadings)++;
 				averageReading(numReadings, averageTemp, temperature);
 				printAverageTemperature(averageTemp);
@@ -66,36 +69,16 @@ machine_state stateStateMachine(int16_t * temperature, uint8_t * numReadings, in
 					else
 					{
 						delay1s();
+						//set LED Green
+				    	toggleLED(1);
 					}
 				}
-//				bit = runBIT();
-//				NVIC_EnableIRQ(SysTick_IRQn);
-//				Init_SysTick();
-/*				while(g_count < 15)
-				{
-					if(g_testrun == 0)
-					{
-						bit = runBIT();
-						if(bit == BITFAIL)
-						{
-							state = DISCONNECTED;
-//							NVIC_DisableIRQ(SysTick_IRQn);
-							break;
-						}
-					}
-					else
-					{
-						Init_SysTick();
-					}
-				}*/
 				if(state == DISCONNECTED)
 				{
-//					NVIC_DisableIRQ(SysTick_IRQn);
 					break;
 				}
 				else
 				{
-//					NVIC_DisableIRQ(SysTick_IRQn);
 					timeout_count++;
 					if(timeout_count < 4)
 					{
@@ -109,9 +92,11 @@ machine_state stateStateMachine(int16_t * temperature, uint8_t * numReadings, in
 				}
 			case TEMP_ALERT :
 				//Disable Interrupt for Alert
-	//			NVIC_DisableIRQ(PORTD_IRQn);
+				NVIC_DisableIRQ(PORTA_IRQn);
 				//set LED Blue
 		    	toggleLED(2);
+		    	//set g_alert to 0
+		    	g_alert = 0;
 				getTemperature(temperature);
 				state = AVERAGE_WAIT;
 				break;
@@ -241,10 +226,9 @@ void SysTick_Handler()
 
 void PORTA_IRQHandler(void)
 {
-	__disable_irq();
+	NVIC_DisableIRQ(PORTA_IRQn);
 	g_alert = 1;
-	__enable_irq();
-
+	PORTA->ISFR |= 0x10;
 }
 
 void delay1s()
