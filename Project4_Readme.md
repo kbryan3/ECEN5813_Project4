@@ -62,7 +62,7 @@ There was some code taken from online sources and those are called out in the
 files they are use in(i2c and statemachine).
 
 ###### Extra Project Documents
-*output examples.pdf*, *ReadTemperature.png/pdf*, *writealertlow.png/pdf*
+*output examples.pdf*, *ReadTemperature.png*, *writealertlow.png*
 
 These documents are in the /.bin folder and are other(non-source code) project4
 deliverables.  They include a screenshot of the outputs in MCUExpresso, containing
