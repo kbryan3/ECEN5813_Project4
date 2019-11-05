@@ -33,6 +33,12 @@
  * If you cannot obtain a copy of the License, please contact the
  * author.
  */
+
+ /*
+ *
+ * Modified by Kyle Bryan to work with project4
+ *November 2019
+ */
 #ifndef TESTSUITE_H_
 #define TESTSUITE_H_
 
